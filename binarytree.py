@@ -17,8 +17,12 @@ class BinaryTree:
             else:
                 self.right.insert(x, y)
 
-    def remove_negative_x_y(self) -> None:
-        pass
+    def remove_negative_x_y(self, root) -> None:
+        if root is not None:
+            self.remove_negative_x_y(root.left)
+            if root.y < 0 and root.x < 0:
+                self.delete_node(self, root.y)
+            self.remove_negative_x_y(root.right)
 
     def print_positive_y(self, root) -> None:
         if root is not None:
@@ -32,3 +36,21 @@ class BinaryTree:
             print("(" + str(root.x) + "; " + str(root.y) + ")")
             self.print_all_nodes(root.left)
             self.print_all_nodes(root.right)
+
+    def delete_node(self, root, key):
+        if root is None:
+            return root
+        if key == root.y:
+            if root.left is None:
+                root = root.right
+            elif root.right is None:
+                root = root.left
+            else:
+                while root.left is not None:
+                    root = root.left
+                root.right = self.delete_node(root.right, key)
+        elif key < root.y:
+            root.left = self.delete_node(root.left, key)
+        else:
+            root.right = self.delete_node(root.right, key)
+        return root
